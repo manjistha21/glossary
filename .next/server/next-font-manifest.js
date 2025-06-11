@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/manjisthaswarnakar/Documents/FINAL/Glossary/app/layout\":[\"static/media/40d40f0f334d7ad1-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
