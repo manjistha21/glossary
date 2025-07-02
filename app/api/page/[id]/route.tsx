@@ -1,4 +1,4 @@
-import Page from '@/models/page';
+import Page from '@/models/Page';
 import connectDB from '@/config/database';
 import { NextResponse } from "next/server";
 
