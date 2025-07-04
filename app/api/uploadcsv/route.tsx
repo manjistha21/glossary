@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { parse } from "papaparse";
-import Page from "@/models/page"; // Make sure this is correct
+import Page from "@/models/Page"; // Make sure this is correct
 import connectDB from "@/config/database";
 
 export async function POST(request: Request) {
