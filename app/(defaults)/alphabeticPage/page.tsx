@@ -6,6 +6,7 @@ export default function AlphabeticalPages() {
   const [pages, setPages] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentPages, setCurrentPages] = useState({});
+  const [activeLetter, setActiveLetter] = useState(null); // New: active letter
   const itemsPerPage = 5;
   const router = useRouter();
 
@@ -49,62 +50,91 @@ export default function AlphabeticalPages() {
     }));
   };
 
+  const handleLetterClick = (letter) => {
+    if (pages[letter]) {
+      setActiveLetter(letter);
+      document.getElementById(letter)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6 text-lg">
-      <nav className="flex justify-center space-x-4 mb-8 text-xl font-semibold">
+    <div className="container mx-auto p-6 text-lg" id="top">
+      <nav className="flex justify-center space-x-4 mb-8 text-xl font-semibold flex-wrap">
         {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
-          <a
+          <button
             key={letter}
-            href={`#${letter}`}
-            className={`text-blue-500 ${pages[letter] ? "" : "opacity-50"}`}
+            onClick={() => handleLetterClick(letter)}
+            className={`${
+              pages[letter] ? "text-blue-500" : "opacity-50"
+            } ${activeLetter === letter ? "underline" : ""}`}
+            disabled={!pages[letter]}
           >
             {letter}
-          </a>
+          </button>
         ))}
       </nav>
+
       <div>
-        {Object.keys(pages).sort().map((letter) => {
-          const startIdx = currentPages[letter] * itemsPerPage;
-          const paginatedPages = pages[letter].slice(startIdx, startIdx + itemsPerPage);
-          const showPagination = pages[letter].length > itemsPerPage;
-          return (
-            <div key={letter} id={letter} className="mb-6">
-              <h2 className="text-2xl font-bold">{letter}</h2>
-              <ul className="ml-4 list-disc">
-                {paginatedPages.map((page, index) => (
-                  <li key={index}>
+        {Object.keys(pages)
+          .sort()
+          .filter((letter) => activeLetter === null || letter === activeLetter)
+          .map((letter) => {
+            const startIdx = currentPages[letter] * itemsPerPage;
+            const paginatedPages = pages[letter].slice(startIdx, startIdx + itemsPerPage);
+            const showPagination = pages[letter].length > itemsPerPage;
+
+            return (
+              <div key={letter} id={letter} className="mb-6">
+                <h2 className="text-2xl font-bold">{letter}</h2>
+                <ul className="ml-4 list-disc">
+                  {paginatedPages.map((page, index) => (
+                    <li key={index}>
+                      <button
+                        onClick={() =>
+                          router.push(`/alphabeticPage/${encodeURIComponent(page.pageName)}`)
+                        }
+                        className="text-blue-500 text-xl underline"
+                      >
+                        {page.pageName}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+
+                {showPagination && (
+                  <div className="flex space-x-2 mt-2">
                     <button
-                      onClick={() => router.push(`/alphabeticPage/${encodeURIComponent(page.pageName)}`)}
-                      className="text-blue-500 text-xl underline"
+                      onClick={() => handlePrevPage(letter)}
+                      disabled={currentPages[letter] === 0}
+                      className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50"
                     >
-                      {page.pageName}
+                      Previous
                     </button>
-                  </li>
-                ))}
-              </ul>
-              {showPagination && (
-              <div className="flex space-x-2 mt-2">
-                <button
-                  onClick={() => handlePrevPage(letter)}
-                  disabled={currentPages[letter] === 0}
-                  className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => handleNextPage(letter)}
-                  disabled={startIdx + itemsPerPage >= pages[letter].length}
-                  className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
+                    <button
+                      onClick={() => handleNextPage(letter)}
+                      disabled={startIdx + itemsPerPage >= pages[letter].length}
+                      className="px-2 py-1 bg-gray-300 rounded disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
-      <a href="#top" className="text-blue-500 fixed bottom-4 right-4 text-xl">↑ Back to Top</a>
+
+      {activeLetter && (
+        <button
+          onClick={() => setActiveLetter(null)}
+          className="fixed bottom-4 left-4 text-blue-500 text-xl"
+        >
+          ← Show All
+        </button>
+      )}
+      <a href="#top" className="text-blue-500 fixed bottom-4 right-4 text-xl">
+        ↑ Back to Top
+      </a>
     </div>
   );
 }
