@@ -6,7 +6,7 @@ export default function AlphabeticalPages() {
   const [pages, setPages] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentPages, setCurrentPages] = useState({});
-  const [activeLetter, setActiveLetter] = useState(null); // New: active letter
+  const [activeLetter, setActiveLetter] = useState("A"); // New: active letter
   const itemsPerPage = 5;
   const router = useRouter();
 
@@ -125,16 +125,20 @@ export default function AlphabeticalPages() {
       </div>
 
       {activeLetter && (
-        <button
-          onClick={() => setActiveLetter(null)}
-          className="fixed bottom-4 left-4 text-blue-500 text-xl"
-        >
-          ← Show All
-        </button>
-      )}
-      <a href="#top" className="text-blue-500 fixed bottom-4 right-4 text-xl">
-        ↑ Back to Top
-      </a>
+  <button
+    onClick={() => setActiveLetter(null)}
+    className="fixed bottom-4 left-4 bg-blue-500 text-white text-xl px-4 py-2 rounded shadow-lg hover:bg-blue-600"
+  >
+    Show All
+  </button>
+)}
+<a
+  href="#top"
+  className="fixed bottom-4 right-4 bg-blue-500 text-white text-xl px-4 py-2 rounded shadow-lg hover:bg-blue-600"
+>
+  ↑ Back to Top
+</a>
+
     </div>
   );
 }
